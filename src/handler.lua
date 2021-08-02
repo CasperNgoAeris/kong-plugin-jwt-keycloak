@@ -74,6 +74,12 @@ local function retrieve_token(conf)
         end
     end
 
+    local access_header = kong.request.get_header("X-Access-Token")
+    if access_header ~="" then
+        kong.log("X-Access-Token ", access_header)
+        return access_header
+    end
+
     local authorization_header = kong.request.get_header("authorization")
     if authorization_header then
         local iterator, iter_err = re_gmatch(authorization_header, "\\s*[Bb]earer\\s+(.+)")
@@ -168,7 +174,7 @@ local function get_keys(well_known_endpoint)
     for i, key in ipairs(keys) do
         decoded_keys[i] = jwt_decoder:base64_decode(key)
     end
-    
+
     kong.log.debug('Number of keys retrieved: ' .. table.getn(decoded_keys))
     return {
         keys = decoded_keys,
@@ -178,7 +184,7 @@ end
 
 local function validate_signature(conf, jwt, second_call)
     local issuer_cache_key = 'issuer_keys_' .. jwt.claims.iss
-    
+
     well_known_endpoint = keycloak_keys.get_wellknown_endpoint(conf.well_known_template, jwt.claims.iss)
     -- Retrieve public keys
     local public_keys, err = kong.cache:get(issuer_cache_key, nil, get_keys, well_known_endpoint, true)
