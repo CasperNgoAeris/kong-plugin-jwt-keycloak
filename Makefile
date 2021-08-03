@@ -1,11 +1,11 @@
 include makefiles/*.mk
 
-REPOSITORY?=gbbirkisson
+REPOSITORY?=CasperNgoAeris
 IMAGE?=kong-plugin-jwt-keycloak
-KONG_VERSION?=2.3.2
+KONG_VERSION?=2.5.0-alpine
 FULL_IMAGE_NAME:=${REPOSITORY}/${IMAGE}:${KONG_VERSION}
 
-PLUGIN_VERSION?=1.1.0-1
+PLUGIN_VERSION?=1.1.0-2
 
 TEST_VERSIONS?=1.1.3 1.2.3 1.3.1 1.4.3 1.5.1 2.0.5 2.1.4 2.2.0 2.3.2
 
